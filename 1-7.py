@@ -2,9 +2,6 @@ import numpy as np
 from visual import *
 from sklearn.neural_network import MLPClassifier
 
-from elice_utils import EliceUtils
-elice_utils = EliceUtils()
-
 import warnings
 warnings.filterwarnings(action='ignore')
 
