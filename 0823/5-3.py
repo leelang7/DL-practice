@@ -1,48 +1,71 @@
+import os
+
 import tensorflow as tf
+from tensorflow.keras import layers, Sequential, Input
+from tensorflow.keras.optimizers import Adam
+
 import numpy as np
-from tensorflow.keras import layers
+import matplotlib.pyplot as plt
 
-np.random.seed(100)
-def generate_data(batch_size, n_steps):
-    freq1, freq2, offsets1, offsets2 = np.random.rand(4,batch_size,1)
-    time = np.linspace(0, 1, n_steps)
-    series = 0.5 * np.sin((time - offsets1)*(freq1 * 10 + 10))
-    series += 0.1 * np.sin((time - offsets2)*(freq2 * 10 + 10))
-    series += 0.1 * (np.random.rand(batch_size,n_steps) - 0.5)
-    return series[...,np.newaxis].astype(np.float32)
+SEED = 2021
 
-def make_model(n_step):
-    model = tf.keras.models.Sequential()
+def load_cifar10_dataset():
+    train_X = np.load("./dataset/cifar10_train_X.npy")
+    train_y = np.load("./dataset/cifar10_train_y.npy")
+    test_X = np.load("./dataset/cifar10_test_X.npy")
+    test_y = np.load("./dataset/cifar10_test_y.npy")
+    
+    train_X, test_X = train_X / 255.0, test_X / 255.0
+    
+    return train_X, train_y, test_X, test_y
 
-    model.add(layers.SimpleRNN(20, return_sequences = True, input_shape = [None, 1])) 
-    model.add(layers.SimpleRNN(20))
-    model.add(layers.Dense(1))
-
-    model.compile(optimizer = 'adam', loss = 'mse')
+def build_mlp_model(img_shape, num_classes=10):
+    model = Sequential()
+    model.add(Input(shape=img_shape))
+    model.add(layers.Flatten())
+    model.add(layers.Dense(2048, activation="relu"))
+    model.add(layers.Dense(1024, activation="relu"))
+    model.add(layers.Dense(256, activation="relu"))
+    model.add(layers.Dense(64, activation="relu"))
+    model.add(layers.Dense(num_classes, activation="softmax"))
     return model
 
-n_step = 50
-series = generate_data(10000, n_step +1)
-x_train, y_train = series[:7000, :n_step],series[:7000,-1]
-x_val, y_val = series[7000:9000, :n_step],series[7000:9000,-1]
-x_test, y_test = series[9000:, :n_step],series[9000:,-1]
+# EarlyStopping 콜백함수의 인스턴스를 cb_earlystop에 저장합니다.
+# TODO: 지시사항 1을 참고하여 매개변수를 설정하세요
+cb_earlystop = tf.keras.callbacks.EarlyStopping( monitor = None , 
+                                                 mode = None,
+                                                 verbose = None,
+                                                 patience = None )
+                                                 
+# ModelCheckpoint 콜백함수의 인스턴스를 cb_chkpnt 저장합니다.
+# TODO: 지시사항 2을 참고하여 매개변수를 설정하세요
+cb_chkpnt = tf.keras.callbacks.ModelCheckpoint( filepath = None, 
+                                             monitor = None,
+                                             mode = None,  
+                                             verbose = None, 
+                                             save_best_only = None,
+                                             save_weights_only = None,
+                                             save_freq = None )
 
-e = 20 # 채점을 위한 구성입니다. 변경하지 마세요
+def main(epochs=10):
+    tf.random.set_seed(SEED)
+    np.random.seed(SEED)
+    
+    train_X, train_y, test_X, test_y = load_cifar10_dataset()
+    img_shape = train_X[0].shape
 
-# TODO: 지시사항을 참고하여 콜백함수를 정의하세요
-class MyCallback(tf.keras.callbacks.Callback):
-    def None:
+    print(img_shape)
 
-    def None:
+    optimizer = Adam(learning_rate=1e-3)
 
-    def None:
+    mlp_model = build_mlp_model(img_shape)
+    
+    mlp_model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 
-def main():        
-    deep_rnn = make_model(n_step)
-    None # TODO: 정의한 콜백함수 클래스의 인스턴스를 만드세요
-    hist=deep_rnn.fit(
-    x=x_train, y=y_train, epochs=e,verbose=0,
-    validation_data=(x_val, y_val),validation_freq=2,callbacks=None) # TODO: 정의한 콜백함수를 리스트로 묶어 전달하세요
+    hist = mlp_model.fit(train_X, train_y, epochs=epochs, batch_size=64, validation_split=0.2, shuffle=True, verbose=1, None)
+    # TODO: cb_earlystop와 cb_chkpnt를 리스트로 묶어 fit 함수의 callbacks 매개변수로 전달하세요.
+
+    return optimizer, hist
 
 if __name__ == "__main__":
     main()
