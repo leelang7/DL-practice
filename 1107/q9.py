@@ -5,9 +5,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Perceptron
 
-from elice_utils import EliceUtils
-elice_utils = EliceUtils()
-
 np.random.seed(100)
 
 '''
