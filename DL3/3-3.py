@@ -49,7 +49,6 @@ def plot_history(hist):
     plt.ylabel('loss')
     plt.legend(['Train', 'Valid'], loc='upper right')
     plt.savefig("loss.png")
-    elice_utils.send_image("loss.png")
     
     fig = plt.figure(figsize=(8, 6))
     plt.plot(train_acc)
@@ -59,7 +58,6 @@ def plot_history(hist):
     plt.ylabel('accuracy')
     plt.legend(['Train', 'Valid'], loc='upper left')
     plt.savefig("accuracy.png")
-    elice_utils.send_image("accuracy.png")
     
 def run_model(model, train_X, train_y, test_X, test_y, epochs=10):
     # TODO: [지시사항 3번] Adam optimizer를 설정하세요.
