@@ -5,8 +5,6 @@ import numpy as np
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-from elice_utils import EliceUtils
-elice_utils = EliceUtils()
 
 np.random.seed(100)
 
@@ -72,7 +70,6 @@ def main():
     # 데이터 출력
     plt.scatter(x_data,y_data)
     plt.savefig('data.png')
-    elice_utils.send_image('data.png')
     
     # 선형 함수 적용
     linear_model = LinearModel()
@@ -106,7 +103,6 @@ def main():
             ax1.scatter(x_data,y_data)
             ax1.plot(x_data,y_pred_data, color='red')
             plt.savefig('prediction.png')
-            elice_utils.send_image('prediction.png')
 
 if __name__ == "__main__":
     main()
