@@ -1,47 +1,40 @@
-import tensorflow as tf
 import numpy as np
-from visual import *
-
+import tensorflow as tf
+from tensorflow.keras import layers
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-np.random.seed(100)
-tf.random.set_seed(100)
-
 def main():
     
-    # 비선형 데이터 생성
+    # XOR 문제를 위한 데이터 생성
     
-    x_data = np.linspace(0, 10, 100)
-    y_data = 1.5 * x_data**2 -12 * x_data + np.random.randn(*x_data.shape)*2 + 0.5
-    
-    '''
-    1. 다층 퍼셉트론 모델을 만듭니다.
-    '''
-    
-    model = tf.keras.models.Sequential([None])
+    training_data = np.array([[0,0],[0,1],[1,0],[1,1]], "float32")
+    target_data = np.array([[0],[1],[1],[0]], "float32")
     
     '''
-    2. 모델 학습 방법을 설정합니다.
+    1. 다층 퍼셉트론 모델을 생성합니다.
     '''
     
-    model.compile(loss = None, optimizer = None)
+    model = None
+    model.add(None)
     
     '''
-    3. 모델을 학습시킵니다.
+    2. 모델의 손실 함수, 최적화 방법, 평가 방법을 설정합니다.
+    '''
+    
+    model.compile(None)
+    
+    '''
+    3. 모델을 학습시킵니다. epochs를 자유롭게 설정해보세요.
     ''' 
     
-    history = None
+    hist = None
     
-    '''
-    4. 학습된 모델을 사용하여 예측값 생성 및 저장
-    '''
+    score = hist.history['binary_accuracy'][-1]
     
-    predictions = None
+    print('최종 정확도: ', score*100, '%')
     
-    Visualize(x_data, y_data, predictions)
-    
-    return history, model
+    return hist
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
